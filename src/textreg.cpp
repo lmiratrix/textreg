@@ -2,16 +2,6 @@
  * Author: Luke Miratrix (lmiratrix@stat.harvard.edu)
  * This is a rewrite of code from the ngram package of Georgiana Ifrim (georgiana.ifrim@gmail.com)
  *
- * This library trains ElasticNet-regularized Logistic Regression and SVM for Classifying Sequences (SEQL: Sequence Learner)
- * in the feature space of all possible subsequences in the given training set.
- * Elastic Net regularizer: alpha * L1 + (1 - alpha)*L2, which balances L1 and L2 effect. L1 influences the sparsity of the model, L2 corrects potentially high coeficients
- * resulting due to feature correlation (see Regularization Paths for Generalized Linear Models via Coordinate Descent, by Friedman et al).
- *
- * License:
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation.
- *
  */
 
 #include <Rcpp.h>
