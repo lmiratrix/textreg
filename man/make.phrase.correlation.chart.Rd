@@ -4,8 +4,13 @@
 \alias{make.phrase.correlation.chart}
 \title{Generate visualization of phrase overlap.}
 \usage{
-make.phrase.correlation.chart(result, count = FALSE, num.groups = 5,
-  use.corrplot = FALSE, ...)
+make.phrase.correlation.chart(
+  result,
+  count = FALSE,
+  num.groups = 5,
+  use.corrplot = FALSE,
+  ...
+)
 }
 \arguments{
 \item{result}{textreg.result object or a similarity matrix from a make.similarity.matrix call.}
@@ -22,8 +27,9 @@ make.phrase.correlation.chart(result, count = FALSE, num.groups = 5,
 Make simple chart showing which phrases have substantial overlap with other phrases.
 }
 \seealso{
-Other Phrase Vizualization: \code{\link{cluster.phrases}},
-  \code{\link{make.appearance.matrix}},
-  \code{\link{make.similarity.matrix}}
+Other Phrase Vizualization: 
+\code{\link{cluster.phrases}()},
+\code{\link{make.appearance.matrix}()},
+\code{\link{make.similarity.matrix}()}
 }
 \concept{Phrase Vizualization}

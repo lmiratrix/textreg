@@ -30,7 +30,8 @@ lbl = meta( bathtub )$meth.chl
 head( make.phrase.matrix( c("bathtub","strip+", "vapor *"), bathtub ) )
 }
 \seealso{
-Other textregCounting: \code{\link{make.count.table}},
-  \code{\link{phrase.count}}
+Other textregCounting: 
+\code{\link{make.count.table}()},
+\code{\link{phrase.count}()}
 }
 \concept{textregCounting}

@@ -16,7 +16,7 @@ Changes digits to 'X's.  Non-alpha characters converted to spaces.
 \examples{
 library( tm )
 txt = c( "thhis s! and bonkus  4:33pm and Jan 3, 2015. ", 
-         "   big    space\\n     dawg-ness?")
+         "   big    space\n     dawg-ness?")
 a <- clean.text( VCorpus( VectorSource( txt ) ) )
 a[[1]]
 }

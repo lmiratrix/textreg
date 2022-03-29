@@ -4,8 +4,7 @@
 \alias{predict.textreg.result}
 \title{Predict labeling with the selected phrases.}
 \usage{
-\method{predict}{textreg.result}(object, new.text = NULL,
-  return.matrix = FALSE, ...)
+\method{predict}{textreg.result}(object, new.text = NULL, return.matrix = FALSE, ...)
 }
 \arguments{
 \item{object}{A textreg.result object}

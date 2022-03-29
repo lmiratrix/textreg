@@ -18,7 +18,9 @@ Dataframe with statistics on the terms in the model
 Calculate some useful statistics (percents, etc) and return as dataframe.
 }
 \seealso{
-Other textreg.result: \code{\link{is.textreg.result}},
-  \code{\link{phrases}}, \code{\link{print.textreg.result}}
+Other textreg.result: 
+\code{\link{is.textreg.result}()},
+\code{\link{phrases}()},
+\code{\link{print.textreg.result}()}
 }
 \concept{textreg.result}

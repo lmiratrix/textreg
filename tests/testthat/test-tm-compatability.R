@@ -9,19 +9,12 @@ context( "textreg tm interactions" )
 
 
 test_that("Calls to tm package stemming works as expected", {
+
     #### Check stemming call to tm_map
     texts <- c("texting goblins the dagger", "text the goblin", "texting 3 goblins appl daggers goblining gobble")
     texts = rep(texts, 1000)
 
     corpus <- VCorpus(VectorSource(texts))
-    length(corpus)
-    aa = tm_map(corpus, stemDocument)
-    expect_equal( length( corpus), 3000 )
-    expect_equal( content( aa[[55]] ), "text goblin the dagger" )
-
-
-    # Why does this produce a warning?
-    corpus <- SimpleCorpus(VectorSource(texts))
     length(corpus)
     aa = tm_map(corpus, stemDocument)
     expect_equal( length( corpus), 3000 )
@@ -67,7 +60,8 @@ test_that("SimpleCorpus works ok", {
     expect_that( corpusA, is_a( "VCorpus" ) )
     expect_that( corpusB, is_a( "SimpleCorpus" ) )
 
-    stemB <- stem.corpus(corpusB, verbose = FALSE)
+    # we get a warning due to the tm_map throwing warnings with a vectorsouce coupled with simplecorpus.  See https://stackoverflow.com/questions/51942767/r-tm-error-of-transformation-drops-documents
+    expect_warning( stemB <- stem.corpus(corpusB, verbose = FALSE) )
 
     # we change corpus type due to being a new corpus
     expect_that( stemB, is_a( "VCorpus" ) )

@@ -4,8 +4,14 @@
 \alias{tm_gregexpr}
 \title{Call gregexpr on the content of a tm Corpus.}
 \usage{
-tm_gregexpr(pattern, corpus, ignore.case = FALSE, perl = FALSE,
-  fixed = FALSE, useBytes = FALSE)
+tm_gregexpr(
+  pattern,
+  corpus,
+  ignore.case = FALSE,
+  perl = FALSE,
+  fixed = FALSE,
+  useBytes = FALSE
+)
 }
 \arguments{
 \item{pattern}{See gregexpr}

@@ -18,7 +18,8 @@ Simply calls path.matrix.chart.
 \seealso{
 path.matrix.chart
 
-Other plot.path.matrix: \code{\link{make.path.matrix}},
-  \code{\link{path.matrix.chart}}
+Other plot.path.matrix: 
+\code{\link{make.path.matrix}()},
+\code{\link{path.matrix.chart}()}
 }
 \concept{plot.path.matrix}

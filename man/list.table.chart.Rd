@@ -4,11 +4,21 @@
 \alias{list.table.chart}
 \title{Graphic showing multiple word lists side-by-side.}
 \usage{
-list.table.chart(model.list, M = 100, linespace = 4, ytick = NULL,
-  dates = NULL, main = paste("Word Appearance for ", attr(model.list,
-  "topic"), "\\n(Method: ", attr(model.list, "method"), ")", sep = ""),
-  xlab = "Model", mar = c(3, 5, 2.5, 0.1), xaxt = "y",
-  color.breaks = NULL, color.ramp = NULL, ...)
+list.table.chart(
+  model.list,
+  M = 100,
+  linespace = 4,
+  ytick = NULL,
+  dates = NULL,
+  main = paste("Word Appearance for ", attr(model.list, "topic"), "\\n(Method: ",
+    attr(model.list, "method"), ")", sep = ""),
+  xlab = "Model",
+  mar = c(3, 5, 2.5, 0.1),
+  xaxt = "y",
+  color.breaks = NULL,
+  color.ramp = NULL,
+  ...
+)
 }
 \arguments{
 \item{model.list}{Matrix (or data.frame) from the make.list.table call.}

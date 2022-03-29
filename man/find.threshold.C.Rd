@@ -4,13 +4,27 @@
 \alias{find.threshold.C}
 \title{Conduct permutation test on labeling to get null distribution of regularization parameter.}
 \usage{
-find.threshold.C(corpus, labeling, banned = NULL, R = 0,
-  objective.function = 2, a = 1, verbosity = 0,
-  step.verbosity = verbosity, positive.only = FALSE,
-  binary.features = FALSE, no.regularization = FALSE,
-  positive.weight = 1, Lq = 2, min.support = 1, min.pattern = 1,
-  max.pattern = 100, gap = 0, token.type = "word",
-  convergence.threshold = 1e-04)
+find.threshold.C(
+  corpus,
+  labeling,
+  banned = NULL,
+  R = 0,
+  objective.function = 2,
+  a = 1,
+  verbosity = 0,
+  step.verbosity = verbosity,
+  positive.only = FALSE,
+  binary.features = FALSE,
+  no.regularization = FALSE,
+  positive.weight = 1,
+  Lq = 2,
+  min.support = 1,
+  min.pattern = 1,
+  max.pattern = 100,
+  gap = 0,
+  token.type = "word",
+  convergence.threshold = 1e-04
+)
 }
 \arguments{
 \item{corpus}{A list of strings or a corpus from the \code{tm} package.}

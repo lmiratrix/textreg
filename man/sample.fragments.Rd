@@ -4,8 +4,15 @@
 \alias{sample.fragments}
 \title{Sample fragments of text to contextualize a phrase.}
 \usage{
-sample.fragments(phrases, labeling, corp, N = 10, char.before = 80,
-  char.after = char.before, metainfo = NULL)
+sample.fragments(
+  phrases,
+  labeling,
+  corp,
+  N = 10,
+  char.before = 80,
+  char.after = char.before,
+  metainfo = NULL
+)
 }
 \arguments{
 \item{phrases}{Phrases to examine (a list of strings)}
@@ -38,7 +45,8 @@ data( bathtub )
 sample.fragments( "bathtub", meta(bathtub)$meth.chl, bathtub )
 }
 \seealso{
-Other sample.fragments: \code{\link{is.fragment.sample}},
-  \code{\link{print.fragment.sample}}
+Other sample.fragments: 
+\code{\link{is.fragment.sample}()},
+\code{\link{print.fragment.sample}()}
 }
 \concept{sample.fragments}

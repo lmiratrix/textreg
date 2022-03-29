@@ -4,7 +4,9 @@
 \name{testCorpora}
 \alias{testCorpora}
 \title{Some small, fake test corpora.}
-\format{A list of dataframes}
+\format{
+A list of dataframes
+}
 \description{
 A list of several fake documents along with some labeling schemes primarily used by the unit testing code.
 Also used in some examples.

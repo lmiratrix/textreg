@@ -4,8 +4,12 @@
 \alias{calc.loss}
 \title{Calculate total loss of model (Squared hinge loss).}
 \usage{
-calc.loss(model.blob, new.text = NULL, new.labeling = NULL,
-  loss = c("square.hinge", "square", "hinge"))
+calc.loss(
+  model.blob,
+  new.text = NULL,
+  new.labeling = NULL,
+  loss = c("square.hinge", "square", "hinge")
+)
 }
 \arguments{
 \item{model.blob}{The model returned from \code{\link{textreg}}}

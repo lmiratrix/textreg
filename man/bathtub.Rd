@@ -4,7 +4,9 @@
 \name{bathtub}
 \alias{bathtub}
 \title{Sample of cleaned OSHA accident summaries.}
-\format{Corpus object from the \code{tm} package.  Has a meta info of the METHELYNE CHLORIDE labeling called "meth.chl"}
+\format{
+Corpus object from the \code{tm} package.  Has a meta info of the METHELYNE CHLORIDE labeling called "meth.chl"
+}
 \description{
 bathtub consists of several accident reports plus a labeling with a +1 for any report
 that had been tagged as related to METHELYNE CHLORIDE.
@@ -15,7 +17,8 @@ data( bathtub )
 meta( bathtub, "meth.chl" )
 }
 \seealso{
-Other bathtub: \code{\link{dirtyBathtub}}
+Other bathtub: 
+\code{\link{dirtyBathtub}}
 }
 \concept{bathtub}
 \keyword{datasets}

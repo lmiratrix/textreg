@@ -4,9 +4,14 @@
 \alias{make.list.table}
 \title{Collate multiple regression runs.}
 \usage{
-make.list.table(result.list, model.names = names(result.list), M = 100,
-  topic = "Summary Collection", method = c("rank", "weight", "count",
-  "word"), annotate = TRUE)
+make.list.table(
+  result.list,
+  model.names = names(result.list),
+  M = 100,
+  topic = "Summary Collection",
+  method = c("rank", "weight", "count", "word"),
+  annotate = TRUE
+)
 }
 \arguments{
 \item{result.list}{List of mix of textreg.result objects and dataframes with two columns of

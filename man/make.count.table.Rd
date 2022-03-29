@@ -36,7 +36,8 @@ make.count.table( c("bathtub","strip+", "vapor *"), lbl, bathtub )
 \seealso{
 grab.fragments
 
-Other textregCounting: \code{\link{make.phrase.matrix}},
-  \code{\link{phrase.count}}
+Other textregCounting: 
+\code{\link{make.phrase.matrix}()},
+\code{\link{phrase.count}()}
 }
 \concept{textregCounting}

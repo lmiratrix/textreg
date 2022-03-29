@@ -1,22 +1,21 @@
 #' Sparse regression package for text that allows for multiple word phrases.
 #'
-#' Built on Georgiana Ifrim's work, but allowing for regularization of phrases, this 
+#' Built on Georgiana Ifrim's work, but allowing for regularization of phrases, this
 #' package does sparse regression using greedy coordinate descent.
-#' In a nutshell, the textreg package allows for regressing a vector of +1/-1 labels onto raw text. 
+#' In a nutshell, the textreg package allows for regressing a vector of +1/-1 labels onto raw text.
 #' The textreg package takes care of converting the text to all of the possible related features, allowing
 #' you to think of the more organic statement of regressing onto ``text'' in some broad sense.
-#' 
+#'
 #' Implementation-wise, it is a wrapper for a modified version of the C++ code written by Georgiana Ifrim to do this regression.
 #' It is also designed to (somewhat) integrate with the tm package, a commonly used R package for dealing with text.
 #'
-#' One warning: this package uses tm, but does need to generate vectors of character strings to pass to the textreg call, which can be quite expensive.  
+#' One warning: this package uses tm, but does need to generate vectors of character strings to pass to the textreg call, which can be quite expensive.
 #' You can also pass a filename to the textreg call instead, which allows one to avoid loading a large corpus into memory and then copying it over.
-#' You can use a prior build.corpus command before textreg to mitigate this cost, but it is an imperfect method.
 #'
 #' The n-gram package is documented, but it is research code, meaning gaps and errors are possible; the author would appreciate notification of anything that is out of order.
 #'
 #' The primary method in this package is the regression call `textreg()`. This method takes a corpus and a labeling vector and returns a textreg.result
-#' object that contains the final regression result along with diagnostic information that can be of use.  
+#' object that contains the final regression result along with diagnostic information that can be of use.
 #'
 #' Start by reading the ``bathtub'' vignette, which walks through most of the functionality of this package.
 #'
@@ -42,7 +41,7 @@ NULL
 
 
 #' Some small, fake test corpora.
-#' 
+#'
 #' A list of several fake documents along with some labeling schemes primarily used by the unit testing code.
 #' Also used in some examples.
 #'
@@ -55,7 +54,7 @@ NULL
 
 
 #' Sample of cleaned OSHA accident summaries.
-#' 
+#'
 #' bathtub consists of several accident reports plus a labeling with a +1 for any report
 #' that had been tagged as related to METHELYNE CHLORIDE.
 #'
@@ -75,7 +74,7 @@ NULL
 
 
 #' Sample of raw-text OSHA accident summaries.
-#' 
+#'
 #' dirtyBathtub consists of the (more) raw data from which the \code{bathtub} dataset is derived.
 #'
 #' @docType data

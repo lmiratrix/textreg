@@ -13,8 +13,9 @@ phrases(x)
 Get the phrases from the textreg.result object?
 }
 \seealso{
-Other textreg.result: \code{\link{is.textreg.result}},
-  \code{\link{print.textreg.result}},
-  \code{\link{reformat.textreg.model}}
+Other textreg.result: 
+\code{\link{is.textreg.result}()},
+\code{\link{print.textreg.result}()},
+\code{\link{reformat.textreg.model}()}
 }
 \concept{textreg.result}

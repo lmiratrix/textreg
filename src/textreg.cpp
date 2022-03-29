@@ -2739,33 +2739,85 @@ public:
 
 
 
-SEXP textreg(Rcpp::XPtr<SeqLearner> seql_learner, Rcpp::List rparam) {
 
-    // Step 1: read parameters for how to run ngram from R
+
+
+// This function takes elements passed from R, and builds the
+// SeqLearner out of the passed text and labeling.  I.e. it builds the
+// start of the ngram tree by identifying all the unigrams and making
+// a list of them all.
+void build_corpus(SeqLearner *seql_learner,
+                         Rcpp::StringVector corpusV,
+                         Rcpp::NumericVector labelV,
+                         Rcpp::StringVector bannedV )
+{
+    // Rcpp::StringVector bannedV = Rcpp::StringVector();
+    std::string outfile = "none";
+
+
+    try {
+        //    	Rprintf("Adding Banned Words\n" );
+        // add banned words
+
+        for ( int i = 0; i < bannedV.size(); i++ ) {
+            std::string stt = std::string(bannedV[i]);
+            seql_learner->add_banned_word( stt );
+        }
+
+        // Step 2: Get the corpus vector
+        //    	Rprintf("Labeling vector is %d long\n", labelV.size() );
+        //    	Rprintf("Corpus is %d long\n", corpusV.size() );
+
+        // did we get a file name or the actual text from the corpus?
+        if ( corpusV.size() == 1 && labelV.size() != 1 ) {
+
+            bool res = seql_learner->read_in_data( std::string(corpusV[0]).c_str(), labelV );
+            if ( !res ) {
+                ::Rf_error( "Failed to read in file data (file not found?)" );
+            } else {
+                if ( seql_learner->verbosity > 0 ) {
+                    Rcout << "Finished reading in from text file" << endl;
+                }
+            }
+        } else {
+            for ( int i = 0; i < corpusV.size(); i++ ) {
+                std::string stt = std::string(corpusV[i]);
+                seql_learner->add_document( stt, labelV[i] );
+            }
+        }
+        seql_learner->finish_initializing();
+
+
+    } catch( std::exception &ex ) {		// or use END_RCPP macro
+        forward_exception_to_r( ex );
+    } catch(...) {
+        ::Rf_error( "c++ exception (unknown reason)" );
+    }
+}
+
+
+
+
+// [[Rcpp::export]]
+SEXP cpp_textreg(Rcpp::StringVector corpusV,
+             Rcpp::NumericVector labelV,
+             Rcpp::StringVector bannedV,
+             Rcpp::List rparam) {
+
     int maxiter = 100;
     bool find_C = false;
     int find_C_iter = 0;
 
-    if ( seql_learner->verbosity > 1 ) {
-        Rcout << "beginning c++ ngram function call\n";
-        Rcout.flush();
-    }
+    SeqLearner *seql_learner = new SeqLearner();
 
-    // get parameters
+    // Step 1: read parameters for how to run ngram from R
     try {
+        seql_learner->verbosity = Rcpp::as<double>(rparam["verbosity"]);
         seql_learner->C = Rcpp::as<double>(rparam["C"]);
         seql_learner->pos_only = Rcpp::as<int>(rparam["positive.only"]);
         seql_learner->maxpat = Rcpp::as<int>(rparam["max.pattern"]);
         seql_learner->minpat = Rcpp::as<int>(rparam["min.pattern"]);
-
-        unsigned int newminsup = Rcpp::as<int>(rparam["min.support"]);
-        if ( seql_learner->has_unigram_cache() && newminsup != seql_learner->minsup ) {
-            if ( seql_learner->verbosity > 0 ) {
-                Rcerr << "Warning: Resetting tree due to min support parameter change from " << seql_learner->minsup << " to " << newminsup << endl;
-            }
-            seql_learner->reset_tree();
-        }
-        seql_learner->minsup = newminsup;
+        seql_learner->minsup = Rcpp::as<int>(rparam["min.support"]);
 
         seql_learner->maxgap = Rcpp::as<int>(rparam["gap"]);
         //  seql_learner->token_type = Rcpp::as<int>(rparam["token.type"]);
@@ -2773,22 +2825,15 @@ SEXP textreg(Rcpp::XPtr<SeqLearner> seql_learner, Rcpp::List rparam) {
         seql_learner->verbosity = Rcpp::as<double>(rparam["verbosity"]);
         seql_learner->step_verbosity = Rcpp::as<double>(rparam["step.verbosity"]);
 
-        double newLp = Rcpp::as<double>(rparam["Lq"]);
-        if ( seql_learner->has_unigram_cache() && seql_learner->Lp != newLp ) {
-            if ( seql_learner->verbosity > 0 ) {
-                Rcerr << "Warning: Resetting tree due to Lq parameter change" << endl;
-            }
-            seql_learner->reset_tree();
-        }
         //Rcout << "Setting Lp to " << newLp << endl;
-        seql_learner->set_Lp( newLp );  // WARNING: p is q in r package.
+        double newLp = Rcpp::as<double>(rparam["Lq"]);
+        seql_learner->set_Lp( newLp );  // WARNING: p is q in R package; names got flipped.  :-(
 
         seql_learner->positive_weight = Rcpp::as<int>(rparam["positive.weight"] );
-
         seql_learner->binary_features = Rcpp::as<int>(rparam["binary.features"] );
         seql_learner->no_regularization = Rcpp::as<int>(rparam["no.regularization"] );
-        maxiter       = Rcpp::as<int>(rparam["maxIter"]);
 
+        maxiter       = Rcpp::as<int>(rparam["maxIter"]);
         find_C       = Rcpp::as<int>(rparam["findC"]);
         find_C_iter  = Rcpp::as<int>(rparam["findCIter"]);
 
@@ -2803,21 +2848,21 @@ SEXP textreg(Rcpp::XPtr<SeqLearner> seql_learner, Rcpp::List rparam) {
     }
 
     if ( seql_learner->verbosity > 1 ) {
-        Rcout << "parameters loaded\n";
+        Rcout << "Parameters loaded.  Beginning C++ call\n";
         Rcout.flush();
     }
-    // Rprintf("Checking Labeling Vector\n" );
 
-    // Step 3: Find all unigrams if not present.
-    if ( !seql_learner->has_unigram_cache() ) {
-        seql_learner->make_unigram_list();
-        seql_learner->cull_unigram_list();
-    } else {
-        if ( seql_learner->verbosity >= 1 ) {
-            Rcout << "No need to build unigram list as it is inherited from previous call" << endl;
-        }
-    }
+    // Step 2: Read in corpus and associated labeling.
+    // NOTE: This modifies seql_learner
+    build_corpus( seql_learner, corpusV, labelV, bannedV );
 
+
+    // Step 3: Find all unigrams.
+    seql_learner->make_unigram_list();
+    seql_learner->cull_unigram_list();
+
+
+    // Check if we are doing regression vs finding threshold C:
     if ( !find_C ) {
         try {
             seql_learner->run( NULL, maxiter );
@@ -2826,6 +2871,8 @@ SEXP textreg(Rcpp::XPtr<SeqLearner> seql_learner, Rcpp::List rparam) {
                 Rcout << "assembling results to return" << endl;
                 Rcout.flush();
             }
+
+            // Pack up the results
             DataFrame df = seql_learner->make_full_model_dataframe(seql_learner->final_model_cache);
             List ruleset = seql_learner->make_rule_set( seql_learner->final_model_cache );
             List search_path = seql_learner->make_search_path();
@@ -2838,7 +2885,7 @@ SEXP textreg(Rcpp::XPtr<SeqLearner> seql_learner, Rcpp::List rparam) {
             notes[ "positive.weight" ] = seql_learner->positive_weight;
 
             if ( seql_learner->verbosity > 1 ) {
-                Rcout << "going to return" << endl;
+                Rcout << "going to return result now." << endl;
                 Rcout.flush();
             }
 
@@ -2846,17 +2893,16 @@ SEXP textreg(Rcpp::XPtr<SeqLearner> seql_learner, Rcpp::List rparam) {
                                   _[ "rules" ] = ruleset,
                                   _[ "notes" ] = notes,
                                   _[ "labeling" ] =  seql_learner->y,
- //                                 _[ "banlist" ] = bannedV,  // This was commented out at some point?  Need to bring back somehow
- //TODO: Add a get ban list to seql_learner
                                   _[ "path"] = search_path );
 
 
-        } catch( std::exception &ex ) {		// or use END_RCPP macro
+        } catch( std::exception &ex ) {
             forward_exception_to_r( ex );
         } catch(...) {
             ::Rf_error( "c++ exception (unknown reason)" );
         }
     } else {
+        // Find threshold C
         if ( seql_learner->verbosity > 1 ) {
             Rcout << "calling find_C\n";
             Rcout.flush();
@@ -2866,194 +2912,17 @@ SEXP textreg(Rcpp::XPtr<SeqLearner> seql_learner, Rcpp::List rparam) {
 
             return res;
 
-        } catch( std::exception &ex ) {		// or use END_RCPP macro
+        } catch( std::exception &ex ) {
             forward_exception_to_r( ex );
         } catch(...) {
             ::Rf_error( "c++ exception in find C block (unknown reason)" );
         }
 
     }
+
+    // Something bad happened, like we got an error.
     return R_NilValue;
 }
 
 
-Rcpp::XPtr<SeqLearner> build_corpus(Rcpp::StringVector corpusV, Rcpp::NumericVector labelV,
-									Rcpp::StringVector bannedV, Rcpp::List rparam)
-{
-    // Rcpp::StringVector bannedV = Rcpp::StringVector();
-	SeqLearner *seql_learner = new SeqLearner();
-    std::string outfile = "none";
 
-
-    if ( seql_learner->verbosity > 1 ) {
-        Rcout << "beginning c++ ngram function call\n";
-        Rcout.flush();
-    }
-
-
-    // get parameters
-    try {
-        seql_learner->verbosity = Rcpp::as<double>(rparam["verbosity"]);
-//        seql_learner->minsup = Rcpp::as<int>(rparam["min.support"]);
-//        seql_learner->set_Lp( Rcpp::as<double>(rparam["Lq"]) );  // WARNING: p is q in r package.
-//        seql_learner->binary_features = Rcpp::as<int>(rparam["binary.features"] );
-
-
-    } catch (std::exception &ex) {		// or use END_RCPP macro
-        Rprintf("Caught error\n" );
-        Rcerr << "error diagnostic '" << ex.what() << "'" << endl;
-        //Rcerr << ex << endl;
-
-        forward_exception_to_r( ex );
-    } catch(...) {
-    	::Rf_error( "c++ exception (unknown reason)" );
-    }
-
-    if ( seql_learner->verbosity > 1 ) {
-        Rcout << "parameters loaded\n";
-        Rcout.flush();
-    }
-    // Rprintf("Checking Labeling Vector\n" );
-
-
-    try {
-    	//    	Rprintf("Adding Banned Words\n" );
-    	// add banned words
-    	// if ( ! Rf_isNull(banned) ) {
-
-			for ( int i = 0; i < bannedV.size(); i++ ) {
-				std::string stt = std::string(bannedV[i]);
-				seql_learner->add_banned_word( stt );
-			}
-		// }
-
-    	// Step 2: Get the corpus vector
-    	//    	Rprintf("Labeling vector is %d long\n", labelV.size() );
-    	//    	Rprintf("Corpus is %d long\n", corpusV.size() );
-
-    	// did we get a file name or the actual text from the corpus?
-    	if ( corpusV.size() == 1 && labelV.size() != 1 ) {
-
-    		bool res = seql_learner->read_in_data( std::string(corpusV[0]).c_str(), labelV );
-    		if ( !res ) {
-    			//Rcerr << "Failing to grab " << std::string(corpusV[0]) << endl;
-    			::Rf_error( "Failed to read in file data (file not found?)" );
-    		} else {
-    			if ( seql_learner->verbosity > 0 ) {
-    				Rcout << "Finished reading in from text file" << endl;
-    			}
-    		}
-    	} else {
-			for ( int i = 0; i < corpusV.size(); i++ ) {
-				std::string stt = std::string(corpusV[i]);
-				seql_learner->add_document( stt, labelV[i] );
-			}
-	   	}
-		seql_learner->finish_initializing();
-
-
-    } catch( std::exception &ex ) {		// or use END_RCPP macro
-    	forward_exception_to_r( ex );
-    } catch(...) {
-    	::Rf_error( "c++ exception (unknown reason)" );
-    }
-
-	// return the external pointer to the R side
-	return Rcpp::XPtr<SeqLearner>( seql_learner, true );
-}
-
-
-Rcpp::XPtr<SeqLearner> update_banned(Rcpp::XPtr<SeqLearner> seql_learner, Rcpp::StringVector bannedV )
-{
-    if ( seql_learner->verbosity >= 1 ) {
-        Rcout << "Updating ban list\n";
-        Rcout.flush();
-    }
-
-    try {
-        seql_learner->banned_words.clear();
-
-        // add banned words
-        for ( int i = 0; i < bannedV.size(); i++ ) {
-            std::string stt = std::string(bannedV[i]);
-            seql_learner->add_banned_word( stt );
-        }
-
-    } catch( std::exception &ex ) {		// or use END_RCPP macro
-        forward_exception_to_r( ex );
-    } catch(...) {
-        ::Rf_error( "c++ exception (unknown reason)" );
-    }
-
-    // return the external pointer to the R side
-    return Rcpp::XPtr<SeqLearner>( seql_learner, true );
-}
-
-
-
-
-// This file was generated by Rcpp::compileAttributes
-// Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
-
-
-// update_banned
-Rcpp::XPtr<SeqLearner> update_banned(Rcpp::XPtr<SeqLearner> seql_learner, Rcpp::StringVector bannedV);
-RcppExport SEXP textreg_update_banned(SEXP seql_learnerSEXP, SEXP bannedVSEXP) {
-    BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<SeqLearner> >::type seql_learner(seql_learnerSEXP );
-        Rcpp::traits::input_parameter< Rcpp::StringVector >::type bannedV(bannedVSEXP );
-        Rcpp::XPtr<SeqLearner> __result = update_banned(seql_learner, bannedV);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-    END_RCPP
-}
-
-
-
-
-
-// This part of the file was generated by Rcpp::compileAttributes
-// Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
-
-
-// textreg
-SEXP textreg(Rcpp::XPtr<SeqLearner> seql_learner, Rcpp::List rparam);
-RcppExport SEXP textreg_textreg(SEXP seql_learnerSEXP, SEXP rparamSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<SeqLearner> >::type seql_learner(seql_learnerSEXP );
-        Rcpp::traits::input_parameter< Rcpp::List >::type rparam(rparamSEXP );
-        SEXP __result = textreg(seql_learner, rparam);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
-
-
-// build_corpus
-Rcpp::XPtr<SeqLearner> build_corpus(Rcpp::StringVector corpusV, Rcpp::NumericVector labelV, Rcpp::StringVector bannedV, Rcpp::List rparam);
-RcppExport SEXP textreg_build_corpus(SEXP corpusVSEXP, SEXP labelVSEXP, SEXP bannedVSEXP, SEXP rparamSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::StringVector >::type corpusV(corpusVSEXP );
-        Rcpp::traits::input_parameter< Rcpp::NumericVector >::type labelV(labelVSEXP );
-        Rcpp::traits::input_parameter< Rcpp::StringVector >::type bannedV(bannedVSEXP );
-        Rcpp::traits::input_parameter< Rcpp::List >::type rparam(rparamSEXP );
-        Rcpp::XPtr<SeqLearner> __result = build_corpus(corpusV, labelV, bannedV, rparam);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}

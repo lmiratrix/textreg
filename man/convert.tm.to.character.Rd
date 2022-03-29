@@ -14,11 +14,11 @@ vector of character.
 }
 \description{
 A utility function useful for testing and some dirty hacks.
-This is because the tm package doesn't leave vector corpora of 
-strings alone anymore.  
+This is because the tm package doesn't leave vector corpora of
+strings alone anymore.
 
 and so sometimes you need to convert your tm object to a string vector
-for various reasons, the 
+for various reasons, the
 main one being handing it to the C++ method.  It is ugly,
 but so it goes.
 

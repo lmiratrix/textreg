@@ -4,7 +4,9 @@
 \name{dirtyBathtub}
 \alias{dirtyBathtub}
 \title{Sample of raw-text OSHA accident summaries.}
-\format{Dataframe.  Has a meta info of the METHELYNE CHLORIDE labeling, plus 100s of other labels.}
+\format{
+Dataframe.  Has a meta info of the METHELYNE CHLORIDE labeling, plus 100s of other labels.
+}
 \description{
 dirtyBathtub consists of the (more) raw data from which the \code{bathtub} dataset is derived.
 }
@@ -13,7 +15,8 @@ data( dirtyBathtub )
 table( dirtyBathtub$fatality )
 }
 \seealso{
-Other bathtub: \code{\link{bathtub}}
+Other bathtub: 
+\code{\link{bathtub}}
 }
 \concept{bathtub}
 \keyword{datasets}

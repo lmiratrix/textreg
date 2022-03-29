@@ -20,7 +20,8 @@ res = textreg( testI$corpus, testI$labelI, c("frog","goat","bat"), C=2, verbosit
 make.path.matrix( res )
 }
 \seealso{
-Other plot.path.matrix: \code{\link{path.matrix.chart}},
-  \code{\link{plot.textreg.result}}
+Other plot.path.matrix: 
+\code{\link{path.matrix.chart}()},
+\code{\link{plot.textreg.result}()}
 }
 \concept{plot.path.matrix}

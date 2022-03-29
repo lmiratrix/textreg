@@ -15,7 +15,8 @@
 Pretty print results of phrase sampling object.
 }
 \seealso{
-Other sample.fragments: \code{\link{is.fragment.sample}},
-  \code{\link{sample.fragments}}
+Other sample.fragments: 
+\code{\link{is.fragment.sample}()},
+\code{\link{sample.fragments}()}
 }
 \concept{sample.fragments}

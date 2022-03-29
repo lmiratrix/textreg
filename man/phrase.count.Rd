@@ -20,7 +20,8 @@ data( bathtub )
 phrase.count( "bathtub", bathtub )
 }
 \seealso{
-Other textregCounting: \code{\link{make.count.table}},
-  \code{\link{make.phrase.matrix}}
+Other textregCounting: 
+\code{\link{make.count.table}()},
+\code{\link{make.phrase.matrix}()}
 }
 \concept{textregCounting}

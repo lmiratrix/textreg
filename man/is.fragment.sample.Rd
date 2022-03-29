@@ -14,7 +14,8 @@ is.fragment.sample(x)
 Is object a fragment.sample object?
 }
 \seealso{
-Other sample.fragments: \code{\link{print.fragment.sample}},
-  \code{\link{sample.fragments}}
+Other sample.fragments: 
+\code{\link{print.fragment.sample}()},
+\code{\link{sample.fragments}()}
 }
 \concept{sample.fragments}

@@ -4,8 +4,16 @@
 \alias{cluster.phrases}
 \title{Cluster phrases based on similarity of appearance.}
 \usage{
-cluster.phrases(result, num.groups = 5, plot = TRUE, yaxt = "n",
-  ylab = "", sub = "", main = "Association of Phrases", ...)
+cluster.phrases(
+  result,
+  num.groups = 5,
+  plot = TRUE,
+  yaxt = "n",
+  ylab = "",
+  sub = "",
+  main = "Association of Phrases",
+  ...
+)
 }
 \arguments{
 \item{result}{A similarity matrix from make.similarity.matrix call or an textreg.result object}
@@ -34,8 +42,9 @@ Warning: for 'negative weight' phrases this method does not do well since it ign
 negative documents.
 }
 \seealso{
-Other Phrase Vizualization: \code{\link{make.appearance.matrix}},
-  \code{\link{make.phrase.correlation.chart}},
-  \code{\link{make.similarity.matrix}}
+Other Phrase Vizualization: 
+\code{\link{make.appearance.matrix}()},
+\code{\link{make.phrase.correlation.chart}()},
+\code{\link{make.similarity.matrix}()}
 }
 \concept{Phrase Vizualization}
